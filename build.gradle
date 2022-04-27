@@ -60,9 +60,6 @@ if (project.hasProperty("gae")) {
     appengineStage.dependsOn thinResolve
 }
 
-if (project.hasProperty("zipkin")) {
-    apply from: "gradle/zipkin.gradle"
-}
 
 idea {
     module {
@@ -143,23 +140,23 @@ project.ext.diffChangelogFile = "src/main/resources/config/liquibase/changelog/"
 liquibase {
     activities {
         main {
-            driver "com.mysql.cj.jdbc.Driver"
-            url "jdbc:mysql://localhost:3306/flint"
-            username "root"
+            driver "org.h2.Driver"
+            url "jdbc:h2:file:./build/h2db/db/flint"
+            username "flint"
             password ""
             changeLogFile "src/main/resources/config/liquibase/master.xml"
-            defaultSchemaName "flint"
+            defaultSchemaName ""
             logLevel "debug"
             classpath "src/main/resources/"
         }
         diffLog {
-            driver "com.mysql.cj.jdbc.Driver"
-            url "jdbc:mysql://localhost:3306/flint"
-            username "root"
+            driver "org.h2.Driver"
+            url "jdbc:h2:file:./build/h2db/db/flint"
+            username "flint"
             password ""
             changeLogFile project.ext.diffChangelogFile
-            referenceUrl "hibernate:spring:com.zipcodeflint.flint.domain?dialect=org.hibernate.dialect.MySQL8Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
-            defaultSchemaName "flint"
+            referenceUrl "hibernate:spring:com.zipcodeflint.flint.domain?dialect=org.hibernate.dialect.H2Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
+            defaultSchemaName ""
             logLevel "debug"
             classpath "$buildDir/classes/java/main"
         }
@@ -244,12 +241,13 @@ dependencies {
         exclude module: "spring-boot-starter-tomcat"
     }
     implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation "org.springframework.boot:spring-boot-starter-websocket"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
     implementation "org.zalando:problem-spring-web"
-    implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
     implementation "org.springframework.security:spring-security-config"
     implementation "org.springframework.security:spring-security-data"
     implementation "org.springframework.security:spring-security-web"
+    implementation "org.springframework.security:spring-security-messaging"
     implementation "io.jsonwebtoken:jjwt-api"
     if (!project.hasProperty("gae")) {
         runtimeOnly "io.jsonwebtoken:jjwt-impl"
@@ -272,6 +270,7 @@ dependencies {
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}"
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
     testImplementation "com.h2database:h2"
+    liquibaseRuntime "com.h2database:h2"
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }

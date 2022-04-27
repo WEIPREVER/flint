@@ -48,6 +48,11 @@ public class CacheConfiguration {
             createCache(cm, com.zipcodeflint.flint.domain.User.class.getName());
             createCache(cm, com.zipcodeflint.flint.domain.Authority.class.getName());
             createCache(cm, com.zipcodeflint.flint.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.zipcodeflint.flint.domain.BankAccount.class.getName());
+            createCache(cm, com.zipcodeflint.flint.domain.BankAccount.class.getName() + ".bankaccounts");
+            createCache(cm, com.zipcodeflint.flint.domain.Statements.class.getName());
+            createCache(cm, com.zipcodeflint.flint.domain.Statements.class.getName() + ".transactions");
+            createCache(cm, com.zipcodeflint.flint.domain.Transactions.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

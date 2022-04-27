@@ -58,6 +58,7 @@ public class SecurityConfiguration {
                 .antMatchers("/app/**/*.{js,html}")
                 .antMatchers("/i18n/**")
                 .antMatchers("/content/**")
+                .antMatchers("/h2-console/**")
                 .antMatchers("/swagger-ui/**")
                 .antMatchers("/test/**");
     }
@@ -94,6 +95,7 @@ public class SecurityConfiguration {
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/**").authenticated()
+            .antMatchers("/websocket/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/health/**").permitAll()
             .antMatchers("/management/info").permitAll()

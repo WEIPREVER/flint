@@ -1,0 +1,63 @@
+
+ application {
+ config {
+	baseName flint
+    applicationType monolith
+    authenticationType jwt
+    clientFramework react
+    prodDatabaseType mysql
+    websocket spring-websocket
+    packageName com.zipcodeflint.flint
+    languages[en, es]
+    clientTheme quartz
+    buildTool gradle
+ }
+  entities *
+}
+
+entity BankAccount {
+accountNumber String unique
+accountName String required
+balance BigDecimal required
+accountType AccountType
+}
+
+enum AccountType {
+CHECKING ("Checking")
+SAVINGS ("Savings")
+}
+
+entity Statements{
+startDate LocalDate required
+endDate LocalDate required
+}
+
+entity Transactions{
+dateOfTransaction Instant required
+typeOfTransaction TransactionType required
+transactionAmount BigDecimal min(0)
+toAccountNumber String
+fromAccountNumber String required
+}
+
+enum TransactionType{
+DEBIT ("Debit")
+CREDIT ("Credit")
+TRANSFER ("Transfer")
+}
+
+relationship ManyToOne {
+  BankAccount{user(login)} to User{bankaccount(accountNumber) required}
+  Transactions to Statements{transactions(id)}
+  Statements{user(login)} to BankAccount{bankaccount(accountNumber)}
+}
+
+
+service * with serviceImpl
+
+paginate Statements, Transactions with pagination
+
+
+
+
+    
